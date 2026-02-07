@@ -1,0 +1,45 @@
+<!-- templates/result.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Natija — NLP MVP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Natija</h1>
+    <h3>Taxmin qilingan mavzu: <span class="tag">{{ pred }}</span></h3>
+
+    <h4>Top klass ehtimolliklari</h4>
+    <ul>
+      {% for lab,p in probs %}
+        <li>{{ lab }} — {{ "%.3f"|format(p) }}</li>
+      {% endfor %}
+    </ul>
+
+    <h4>Top so‘zlar (model natijaga ijobiy ta'sir ko‘rsatgan)</h4>
+    <ol>
+      {% for token, contrib, tfidf, coef in top_pos %}
+        <li><strong>{{ token }}</strong> — ta'sir: {{ "%.4f"|format(contrib) }}, tfidf={{ "%.4f"|format(tfidf) }}, coef={{ "%.4f"|format(coef) }}</li>
+      {% else %}
+        <li>Hech qanday top token topilmadi.</li>
+      {% endfor %}
+    </ol>
+
+    <h4>Top so‘zlar (natijaga salbiy ta'sir ko‘rsatgan)</h4>
+    <ol>
+      {% for token, contrib, tfidf, coef in top_neg %}
+        <li><strong>{{ token }}</strong> — ta'sir: {{ "%.4f"|format(contrib) }}, tfidf={{ "%.4f"|format(tfidf) }}, coef={{ "%.4f"|format(coef) }}</li>
+      {% else %}
+        <li>Hech qanday top token topilmadi.</li>
+      {% endfor %}
+    </ol>
+
+    <h4>Kiritilgan matn (qisqaroq ko‘rinish)</h4>
+    <div class="input-box">{{ text }}</div>
+
+    <p><a href="{{ url_for('index') }}">&larr; Yangi matn tasniflash</a></p>
+  </div>
+</body>
+</html>
